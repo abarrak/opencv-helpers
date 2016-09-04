@@ -3,4 +3,4 @@
 
 
 ## License.
-Unlicensed (public domain license).
+Unlicensed (public domain).

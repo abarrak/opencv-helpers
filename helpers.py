@@ -84,12 +84,14 @@ def scale(image, new_size, kind='width'):
         # inter_area for resizing algorithm parameter.
         return cv.resize(image, (new_width, new_size), interpolation=cv.INTER_AREA)
   else:
-    raise Exception('not supported option.')
-
+    raise Exception('Not supported option.')
 
 '''
 '   Image Preprocessing Functions
 '''
+
+def frame():
+  ''' Add borders around :image: '''
 
 
 '''

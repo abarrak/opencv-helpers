@@ -32,7 +32,23 @@ def test_rsize():
 
 def test_scale():
   img = load(IMG_SAMPLE)
-  scaled = scale(img, 200, 'width')
+
+  new_w = 200
+  scaled = scale(img, new_w, 'width')
   assert img != scaled
   assert img.shape[0:2] != scaled.shape[0:2]
+  # enusre formula: new height = [new width / (aspect ratio = original width / original height)]
+  assert scaled.shape[0] == int(new_w // (img.shape[1] / img.shape[0]))
+  
+  new_h = 300
+  scaled = scale(img, new_h, 'height')
+  assert img != scaled
+  assert img.shape[0:2] != scaled.shape[0:2]
+  # enusre formula: new width = [new height / (aspect ratio = original width / original height)]
+  assert scaled.shape[1] == int(new_h // (img.shape[1] / img.shape[0]))
 
+  with pytest.raises(Exception):
+    scale(img, 200, 'malform')
+
+def test_frame():
+  pass
