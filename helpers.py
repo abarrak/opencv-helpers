@@ -30,7 +30,7 @@ def load(path, mode=cv.IMREAD_COLOR):
   '''
   img = cv.imread(path, mode)
   if img is None:
-    raise Exception('Error: Image not found.')
+    raise Exception("Error: Image not found in %s." % path)
   return img
 
 def show(image, title='Image Viewer'):
@@ -121,18 +121,16 @@ def current_dir():
   ''' return the script current path. '''
   return os.curdir
 
-def combine(directory, file):
-  return os.path.join(directory, file)
-
 def cobmine_with_current_path(filename):
   ''' construct a path of the given filename. Can be foldername too. '''
-  current = LVHelpers.current_dir()
-  path = LVHelpers.combine(current, filename)
+  current = current_dir()
+  path = combine(current, filename)
   return path
 
 def combine(filename, path=None):
   ''' construct a path of the given file/folder name with the current directory or given path. '''
   curr = path or current_dir()
+  print(curr)
   return os.path.join(curr, filename)
 
 
