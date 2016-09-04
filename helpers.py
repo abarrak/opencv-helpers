@@ -46,12 +46,14 @@ def save(path, image):
   ''' persist :image: object to disk. '''
   cv.imwrite(path, image)
 
-def plot(image):
+def plot(image, is_bgr=True, cmap=None):
   ''' show image in matplotlib viewer. '''
   if isinstance(image, str):
     image = load(str)
-
-  plt.imshow(image, 'Greys_r')
+  # opencv image are in BGR colormap while matplotlib in RGB.
+  if is_bgr:
+    image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+  plt.imshow(image, cmap)
   plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
   plt.show()  
 
@@ -86,11 +88,12 @@ def scale(image, new_size, kind='width'):
   else:
     raise Exception('Not supported option.')
 
+
 '''
 '   Image Preprocessing Functions
 '''
-def grayscale():
-  pass
+def grayscale(image):
+  return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
 def fixed_threshold(image, thres_value=130):
   ''' :param thres_value: the threshold constant. '''
@@ -186,4 +189,4 @@ def combine(filename, path=None):
 
 
 if __name__ == '__main__':
-  pass
+  plot(load('images/1.jpg'))

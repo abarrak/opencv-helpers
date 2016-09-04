@@ -27,4 +27,4 @@ before_script:
   - rm -fr .cache
   - rm -fr *.pyc
 script:
-  - pytest --ignore=build
+  - pytest -k test_helpers.py --ignore=build
