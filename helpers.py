@@ -51,7 +51,7 @@ def plot(image):
   if isinstance(image, str):
     image = load(str)
 
-  plt.imshow(image)
+  plt.imshow(image, 'Greys_r')
   plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
   plt.show()  
 
@@ -92,16 +92,16 @@ def scale(image, new_size, kind='width'):
 def grayscale():
   pass
 
-def fixed_threshold(image, threshold_value=130):
-  ''' :param fixed_threshold: the threshold constant. '''
-  ret, thresholded = cv.threshold(image, fixed_threshold, 255, cv.THRESH_BINARY_INV)
+def fixed_threshold(image, thres_value=130):
+  ''' :param thres_value: the threshold constant. '''
+  ret, thresholded = cv.threshold(image, thres_value, 255, cv.THRESH_BINARY_INV)
   return thresholded
 
 def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
   '''
-  :param kind: specifiy adaptive method, whether 'mean' or 'gaussian'.
+  :param kind: specify adaptive method, whether 'mean' or 'gaussian'.
   :param cell_size: n for the region size (n x n).
-  :param c_param: substraction constant.
+  :param c_param: subtraction constant.
   :return: a binary version of the input image.
   '''
   if kind == 'mean':
@@ -109,18 +109,45 @@ def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
   elif kind == 'gaussian':
     method = cv.ADAPTIVE_THRESH_GAUSSIAN_C
   else:
-    raise Exception('Unknown adaptive threshod method.')
+    raise Exception('Unknown adaptive threshold method.')
 
   return cv.adaptiveThreshold(image, 255, method, cv.THRESH_BINARY_INV, cell_size, c_param)
 
-def smooth():
-  pass
+def smooth(image, method='gaussian'):
+  ''' blur filter for noise removal . '''
+  if method == 'blur':
+    return cv.blur(image, (5, 5))
+  elif method =='gaussian':
+    return cv.GaussianBlur(image, (5, 5), 0)
+  else:
+    raise Exception('Unknown smoothing method.')
+
+def thin(image, kernel=(2, 2)):
+  ''' reduce the shape line stroke. '''
+  k = np.ones(kernel, np.uint8)
+  return cv.erode(image, k, iterations=1)
+
+def stress(image, kernel=(1, 1)):
+  ''' increase the shape thickness. '''
+  k = np.ones(kernel, np.uint8)
+  return cv.dilate(image, k)
+
+def remove_noise(image, kernel):
+  ''' removes noisy pixels in the area. '''
+  return cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
+
+def fill(image, kernel):
+  ''' fill gaps in shapes structure. '''
+  return cv.morphologyEx(image, cv.MORPH_CLOSE, kernel)
 
 def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[0, 0, 255]):
   ''' 
   Add borders around :image: param. 
-  Other options for borderType are:
-  cv.BORDER_REFLECT, cv.BORDER_REFLECT_101, cv.BORDER_DEFAULT, cv2.BORDER_REPLICATE, cv2.BORDER_WRAP
+  Other options for borderType are: cv.BORDER_REFLECT, 
+                                    cv.BORDER_REFLECT_101, 
+                                    cv.BORDER_DEFAULT, 
+                                    cv2.BORDER_REPLICATE, 
+                                    cv2.BORDER_WRAP
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
 
@@ -159,4 +186,4 @@ def combine(filename, path=None):
 
 
 if __name__ == '__main__':
-  plot(frame(load('images/1.jpg')))
+  pass
