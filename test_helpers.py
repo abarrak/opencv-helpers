@@ -17,38 +17,48 @@ import cv2 as cv
 import pytest
 from helpers import *
 
-IMG_SAMPLE = 'images/1.jpg'
+
+sample_one = load("images/1.jpg")
+sample_two = load("images/1.jpg")
 
 def test_load():
-  assert type(load(IMG_SAMPLE)) == np.ndarray
+  assert type(load("images/1.jpg")) == np.ndarray
   with pytest.raises(Exception):
     load('images/not-there.jpg')
 
 def test_rsize():
-  img = load(IMG_SAMPLE)
-  sized = resize(img, 200, 200)
-  assert img != sized
-  assert img.shape[0:2] != sized.shape[0:2]
+  sized = resize(sample_one, 200, 200)
+  assert sample_one != sized
+  assert sample_one.shape[0:2] != sized.shape[0:2]
 
 def test_scale():
-  img = load(IMG_SAMPLE)
-
   new_w = 200
-  scaled = scale(img, new_w, 'width')
-  assert img != scaled
-  assert img.shape[0:2] != scaled.shape[0:2]
+  scaled = scale(sample_one, new_w, 'width')
+  assert sample_one != scaled
+  assert sample_one.shape[0:2] != scaled.shape[0:2]
   # enusre formula: new height = [new width / (aspect ratio = original width / original height)]
-  assert scaled.shape[0] == int(new_w // (img.shape[1] / img.shape[0]))
+  assert scaled.shape[0] == int(new_w // (sample_one.shape[1] / sample_one.shape[0]))
   
   new_h = 300
-  scaled = scale(img, new_h, 'height')
-  assert img != scaled
-  assert img.shape[0:2] != scaled.shape[0:2]
+  scaled = scale(sample_one, new_h, 'height')
+  assert sample_one != scaled
+  assert sample_one.shape[0:2] != scaled.shape[0:2]
   # enusre formula: new width = [new height / (aspect ratio = original width / original height)]
-  assert scaled.shape[1] == int(new_h // (img.shape[1] / img.shape[0]))
+  assert scaled.shape[1] == int(new_h // (sample_one.shape[1] / sample_one.shape[0]))
 
   with pytest.raises(Exception):
-    scale(img, 200, 'malform')
+    scale(sample_one, 200, 'malform')
 
 def test_frame():
-  pass
+  framed = frame(sample_one)
+  assert sample_one != framed
+  assert sample_one.shape[0] < framed.shape[0] and sample_one.shape[1] < framed.shape[1]
+  assert sample_one.shape[0] == framed.shape[0] - 4
+  assert sample_one.shape[1] == framed.shape[1] - 4
+
+  framed = frame(sample_one, 1, 1, 3, 3)
+  assert sample_one != framed
+  assert sample_one.shape[0] < framed.shape[0] and sample_one.shape[1] < framed.shape[1]
+  assert sample_one.shape[0] == framed.shape[0] - 2
+  assert sample_one.shape[1] == framed.shape[1] - 6
+

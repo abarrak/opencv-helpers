@@ -89,9 +89,40 @@ def scale(image, new_size, kind='width'):
 '''
 '   Image Preprocessing Functions
 '''
+def grayscale():
+  pass
 
-def frame():
-  ''' Add borders around :image: '''
+def fixed_threshold(image, threshold_value=130):
+  ''' :param fixed_threshold: the threshold constant. '''
+  ret, thresholded = cv.threshold(image, fixed_threshold, 255, cv.THRESH_BINARY_INV)
+  return thresholded
+
+def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
+  '''
+  :param kind: specifiy adaptive method, whether 'mean' or 'gaussian'.
+  :param cell_size: n for the region size (n x n).
+  :param c_param: substraction constant.
+  :return: a binary version of the input image.
+  '''
+  if adaptive_type == 'mean':
+    method = cv.ADAPTIVE_THRESH_MEAN_C
+  elif adaptive_type == 'gaussian':
+    method = cv.ADAPTIVE_THRESH_GAUSSIAN_C
+  else:
+    raise Exception('Unknown adaptive threshod method.')
+
+  return cv.adaptiveThreshold(image, 255, method, cv.THRESH_BINARY_INV, cell_size, c_param)
+
+def smooth():
+  pass
+
+def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[0, 0, 255]):
+  ''' 
+  Add borders around :image: param. 
+  Other options for borderType are:
+  cv.BORDER_REFLECT, cv.BORDER_REFLECT_101, cv.BORDER_DEFAULT, cv2.BORDER_REPLICATE, cv2.BORDER_WRAP
+  '''
+  return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
 
 
 '''
@@ -121,18 +152,11 @@ def current_dir():
   ''' return the script current path. '''
   return os.curdir
 
-def cobmine_with_current_path(filename):
-  ''' construct a path of the given filename. Can be foldername too. '''
-  current = current_dir()
-  path = combine(current, filename)
-  return path
-
 def combine(filename, path=None):
-  ''' construct a path of the given file/folder name with the current directory or given path. '''
+  ''' construct a path of given file/folder with the current directory or given path. '''
   curr = path or current_dir()
-  print(curr)
   return os.path.join(curr, filename)
 
 
 if __name__ == '__main__':
-  pass
+  show(frame(load('images/1.jpg')))
