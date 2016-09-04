@@ -1,30 +1,35 @@
 language: python
 python:
   - 2.7
-compiler:
-  - gcc
-before_install:
-  - sudo apt-get update
-install:
-  - sudo apt-get install python-dev
-  - sudo apt-get install -y build-essential
-  - sudo apt-get install libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
-  - pip install -r requirements.txt
-before_script:
-  - git clone https://github.com/Itseez/opencv.git
-  - cd opencv
-  - git checkout 2.4
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make -j8
-  - sudo make install
-  - sudo ldconfig
-  - cd /home/travis/virtualenv/python2.7.12/lib/python2.7/site-packages
-  - ln -s /usr/local/lib/python2.7/site-packages/cv2.so cv2.so
-  - cd ~/virtualenv/abarrak/opencv-helpers
-  - rm -fr __pycache__
-  - rm -fr .cache
-  - rm -fr *.pyc
+# compiler:
+#   - gcc
+# before_install:
+#   - sudo apt-get update
+# install:
+#   - sudo apt-get install python-dev
+#   - sudo apt-get install -y build-essential
+#   - sudo apt-get install libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
+#   - pip install -r requirements.txt
+# before_script:
+#   - git clone https://github.com/Itseez/opencv.git
+#   - cd opencv
+#   - git checkout 2.4
+#   - mkdir build
+#   - cd build
+#   - cmake ..
+#   - make -j8
+#   - sudo make install
+#   - sudo ldconfig
+#   - cd /home/travis/virtualenv/python2.7.12/lib/python2.7/site-packages
+#   - ln -s /usr/local/lib/python2.7/site-packages/cv2.so cv2.so
+#   - cd ~/virtualenv/abarrak/opencv-helpers
+#   - rm -fr __pycache__
+#   - rm -fr .cache
+#   - rm -fr *.pyc
 script:
-  - pytest --ignore=build
+  - ls
+  - echo ~
+  - pwd
+  - la -al
+  - tree
+  # - pytest --ignore=build

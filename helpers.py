@@ -104,9 +104,9 @@ def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
   :param c_param: substraction constant.
   :return: a binary version of the input image.
   '''
-  if adaptive_type == 'mean':
+  if kind == 'mean':
     method = cv.ADAPTIVE_THRESH_MEAN_C
-  elif adaptive_type == 'gaussian':
+  elif kind == 'gaussian':
     method = cv.ADAPTIVE_THRESH_GAUSSIAN_C
   else:
     raise Exception('Unknown adaptive threshod method.')
@@ -159,4 +159,4 @@ def combine(filename, path=None):
 
 
 if __name__ == '__main__':
-  show(frame(load('images/1.jpg')))
+  plot(frame(load('images/1.jpg')))
