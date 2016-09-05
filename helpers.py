@@ -55,8 +55,7 @@ def plot(image, is_bgr=True, cmap=None):
     image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
   plt.imshow(image, cmap)
   plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-  plt.show()  
-
+  plt.show()
 
 '''
 '   Images Manipulation Functions
@@ -86,8 +85,36 @@ def scale(image, new_size, kind='width'):
         # inter_area for resizing algorithm parameter.
         return cv.resize(image, (new_width, new_size), interpolation=cv.INTER_AREA)
   else:
-    raise Exception('Not supported option.')
+    raise ValueError('Not supported option.')
 
+def crop(image, x_start, x_end, y_start, y_end):
+  ''' cut q region of :image: by suppiled x, y pixel coordinates. '''
+  range_check = lambda p, lim: p < 0 or p > lim
+  side_error  = lambda name, val, lim: "Supplied %s(=%d) argument is out of bount 0 =< %s =< %d " % \
+                                  (name, x_start, name, x_lim)
+
+  x_lim, y_lim = image.shape[1], image.shape[0]
+
+  if range_check(x_start, x_lim):
+    raise IndexError(side_error("x_start", x_start, x_lim))
+  if range_check(x_end, x_lim):
+    raise IndexError(side_error("x_end", x_end, x_lim))
+  if range_check(y_start, y_lim):
+    raise IndexError(side_error("y_start", y_start, x_lim))
+  if range_check(y_end, y_lim):
+    raise IndexError(side_error("y_end", y_end, x_lim))
+
+  if x_start > x_end:
+    raise IndexError("x_start(=%d) index can't be greater than x_end(=%d)" % (x_start, x_end))
+  if y_start > y_end:
+    raise IndexError("y_start(=%d) index can't be greater than y_end(=%d)" % (y_start, y_end))
+
+  if x_start == x_end:
+    raise IndexError("x_start and x_end can't both have the same value (=%d)" % x_start)
+  if y_start == y_end:
+    raise IndexError("y_start and y_end can't both have the same value(=%d)" % y_start)
+
+  return image[y_start:y_end, x_start:x_end]
 
 '''
 '   Image Preprocessing Functions
@@ -112,7 +139,7 @@ def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
   elif kind == 'gaussian':
     method = cv.ADAPTIVE_THRESH_GAUSSIAN_C
   else:
-    raise Exception('Unknown adaptive threshold method.')
+    raise ValueError('Unknown adaptive threshold method.')
 
   return cv.adaptiveThreshold(image, 255, method, cv.THRESH_BINARY_INV, cell_size, c_param)
 
@@ -123,7 +150,7 @@ def smooth(image, method='gaussian'):
   elif method =='gaussian':
     return cv.GaussianBlur(image, (5, 5), 0)
   else:
-    raise Exception('Unknown smoothing method.')
+    raise ValueError('Unknown smoothing method.')
 
 def thin(image, kernel=(2, 2)):
   ''' reduce the shape line stroke. '''
@@ -144,12 +171,12 @@ def fill(image, kernel):
   return cv.morphologyEx(image, cv.MORPH_CLOSE, kernel)
 
 def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[0, 0, 255]):
-  ''' 
-  Add borders around :image: param. 
-  Other options for borderType are: cv.BORDER_REFLECT, 
-                                    cv.BORDER_REFLECT_101, 
-                                    cv.BORDER_DEFAULT, 
-                                    cv2.BORDER_REPLICATE, 
+  '''
+  Add borders around :image:.
+  Other options for borderType are: cv.BORDER_REFLECT,
+                                    cv.BORDER_REFLECT_101,
+                                    cv.BORDER_DEFAULT,
+                                    cv2.BORDER_REPLICATE,
                                     cv2.BORDER_WRAP
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
@@ -179,14 +206,14 @@ def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT
 '   Utilities
 '''
 def current_dir():
-  ''' return the script current path. '''
+  ''' return script current path. '''
   return os.curdir
 
 def combine(filename, path=None):
-  ''' construct a path of given file/folder with the current directory or given path. '''
+  ''' construct path of the given file/folder with current directory or a given path. '''
   curr = path or current_dir()
   return os.path.join(curr, filename)
 
 
 if __name__ == '__main__':
-  plot(load('images/1.jpg'))
+  plot(crop(load('images/1.jpg'), 0, 5, 100, 100))
