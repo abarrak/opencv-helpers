@@ -26,6 +26,16 @@ def test_load():
   with pytest.raises(Exception):
     load('images/not-there.jpg')
 
+def test_save():
+  save('images/new_1.jpg', sample_one)
+  assert os.path.isfile('images/new_1.jpg')
+  save('images/new_2.jpg', sample_one, jpg_quality=50)
+  assert os.path.isfile('images/new_2.jpg')
+
+  assert os.path.getsize('images/new_1.jpg') > os.path.getsize('images/new_2.jpg')
+  os.remove('images/new_1.jpg')
+  os.remove('images/new_2.jpg')
+
 def test_rsize():
   sized = resize(sample_one, 200, 200)
   assert sample_one != sized

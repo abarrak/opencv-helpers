@@ -43,12 +43,22 @@ def show(image, title='Image Viewer'):
   cv.waitKey(0)
   cv.destroyAllWindows()
 
-def save(path, image):
-  ''' persist :image: object to disk. if path is given, load() first. '''
+def save(path, image, jpg_quality=None, png_compression=None):
+  '''
+  persist :image: object to disk. if path is given, load() first.
+  jpg_quality: for jpeg only. 0 - 100 (higher means better). Default is 95.
+  png_compression: For png only. 0 - 9 (higher means a smaller size and longer compression time).
+                  Default is 3.
+  '''
   if isinstance(image, str):
     image = load(str)
 
-  cv.imwrite(path, image)
+  if jpg_quality:
+    cv.imwrite(path, image, [cv.IMWRITE_JPEG_QUALITY, jpg_quality])
+  elif png_compression:
+    cv.imwrite(path, image, [cv.IMWRITE_PNG_COMPRESSION, png_compression])
+  else:
+    cv.imwrite(path, image)
 
 def plot(image, is_bgr=True, cmap=None):
   ''' show image in matplotlib viewer. if path is given, load() first. '''
@@ -65,7 +75,7 @@ def plot(image, is_bgr=True, cmap=None):
 
 def metadata(image):
   ''' return a hash with useful info about :image:. '''
-  return {'size': image.size, 'shape': image.shape, 'date_type': image.dtype }
+  return {'pixels_number': image.size, 'structure': image.shape, 'date_type': image.dtype }
 
 '''
 '   Images Manipulation Functions
