@@ -61,7 +61,7 @@ def save(path, image, jpg_quality=None, png_compression=None):
   else:
     cv.imwrite(path, image)
 
-def plot(image, is_bgr=True, cmap=None, window_title='Image Viewer', disable_toolbar=True):
+def plot(image, is_bgr=True, cmap=None, title='Image Viewer', disable_toolbar=True):
   ''' show image in matplotlib viewer. if path is given, load() first. '''
   if isinstance(image, str):
     image = load(str)
@@ -74,14 +74,14 @@ def plot(image, is_bgr=True, cmap=None, window_title='Image Viewer', disable_too
     image = convert_to_rgb(image)
 
   fig = plt.figure()
-  fig.canvas.set_window_title(window_title)
+  fig.canvas.set_window_title(title)
 
   plt.imshow(image, cmap)
   # hide tick values on X and Y axis.
   plt.xticks([]), plt.yticks([])
   plt.show()
 
-def plot_two_images(image1, image2, window_title='Image Viewer', disable_toolbar=True):
+def plot_two_images(image_1, image_2, cmap_1=None, cmap_2=None, title='Image Viewer', disable_toolbar=True):
   '''
   plot :image1: and :image2: in a row.
   '''
@@ -89,21 +89,20 @@ def plot_two_images(image1, image2, window_title='Image Viewer', disable_toolbar
     matplotlib.rcParams['toolbar'] = 'None'
 
   fig = plt.figure(figsize=(13, 4))
-  fig.canvas.set_window_title(window_title)
+  fig.canvas.set_window_title(title)
 
   a = fig.add_subplot(1, 2, 1)
 
-  plt.imshow(img1)
+  plt.imshow(image_1, cmap_1)
   plt.xticks([]), plt.yticks([])
   a.set_title('Before')
 
   a = fig.add_subplot(1, 2 ,2)
-  plt.imshow(img2)
+  plt.imshow(image_2, cmap_2)
   plt.xticks([]), plt.yticks([])
   a.set_title('After')
 
   plt.show()
-
 
 def metadata(image):
   ''' return a hash with useful info about :image:. '''
@@ -171,8 +170,12 @@ def crop(image, x_start, x_end, y_start, y_end):
 '''
 '   Image Preprocessing Functions
 '''
-def grayscale(image):
-  return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+def grayscale(image, is_rgb=False):
+  # opencv image are in BGR colormap while matplotlib in RGB.
+  if is_rgb:
+    return cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+  else:
+    return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
 def convert_to_rgb(image):
   return cv.cvtColor(image, cv.COLOR_BGR2RGB)
@@ -231,11 +234,11 @@ def stress(image, kernel=(1, 1)):
   k = np.ones(kernel, np.uint8)
   return cv.dilate(image, k)
 
-def remove_noise(image, kernel):
+def remove_noise(image, kernel=(2, 2)):
   ''' removes noisy pixels in the area. '''
   return cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
 
-def fill(image, kernel):
+def fill(image, kernel=(2, 2)):
   ''' fill gaps in shapes structure. '''
   return cv.morphologyEx(image, cv.MORPH_CLOSE, kernel)
 
@@ -283,14 +286,6 @@ def combine(filename, path=None):
   curr = path or current_dir()
   return os.path.join(curr, filename)
 
-'''
-' Examples (for examples.py later)
-'''
-def examples():
-  pass
 
 if __name__ == '__main__':
-  examples()
-  img1 = convert_to_rgb(load('images/2.jpg'))
-  img2 = smooth(img1, kernel=(71, 71))
-  plot_two_images(img1, img2)
+  pass
