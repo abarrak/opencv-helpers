@@ -15,6 +15,7 @@ from __future__ import print_function, division
 import os
 import numpy as np
 import cv2 as cv
+import matplotlib
 from matplotlib import pyplot as plt
 
 
@@ -60,18 +61,49 @@ def save(path, image, jpg_quality=None, png_compression=None):
   else:
     cv.imwrite(path, image)
 
-def plot(image, is_bgr=True, cmap=None):
+def plot(image, is_bgr=True, cmap=None, window_title='Image Viewer', disable_toolbar=True):
   ''' show image in matplotlib viewer. if path is given, load() first. '''
   if isinstance(image, str):
     image = load(str)
 
+  if disable_toolbar:
+    matplotlib.rcParams['toolbar'] = 'None'
+
   # opencv image are in BGR colormap while matplotlib in RGB.
   if is_bgr:
-    image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+    image = convert_to_rgb(image)
+
+  fig = plt.figure()
+  fig.canvas.set_window_title(window_title)
+
   plt.imshow(image, cmap)
   # hide tick values on X and Y axis.
   plt.xticks([]), plt.yticks([])
   plt.show()
+
+def plot_two_images(image1, image2, window_title='Image Viewer', disable_toolbar=True):
+  '''
+  plot :image1: and :image2: in a row.
+  '''
+  if disable_toolbar:
+    matplotlib.rcParams['toolbar'] = 'None'
+
+  fig = plt.figure(figsize=(13, 4))
+  fig.canvas.set_window_title(window_title)
+
+  a = fig.add_subplot(1, 2, 1)
+
+  plt.imshow(img1)
+  plt.xticks([]), plt.yticks([])
+  a.set_title('Before')
+
+  a = fig.add_subplot(1, 2 ,2)
+  plt.imshow(img2)
+  plt.xticks([]), plt.yticks([])
+  a.set_title('After')
+
+  plt.show()
+
 
 def metadata(image):
   ''' return a hash with useful info about :image:. '''
@@ -141,6 +173,9 @@ def crop(image, x_start, x_end, y_start, y_end):
 '''
 def grayscale(image):
   return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+
+def convert_to_rgb(image):
+  return cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
 def fixed_threshold(image, thresh_value=120, above_thresh_assigned=255, thresh_style=cv.THRESH_BINARY_INV):
   '''
@@ -252,10 +287,10 @@ def combine(filename, path=None):
 ' Examples (for examples.py later)
 '''
 def examples():
-  im = resize(load('images/2.jpg'), 800, 400)
-  show(im)
-  show(thin(im, (5, 5)))
-  show(stress(im, (5, 5)))
+  pass
 
 if __name__ == '__main__':
   examples()
+  img1 = convert_to_rgb(load('images/2.jpg'))
+  img2 = smooth(img1, kernel=(71, 71))
+  plot_two_images(img1, img2)

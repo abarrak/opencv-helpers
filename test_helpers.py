@@ -126,6 +126,32 @@ def test_crop():
   assert sample_one.shape[0] - cropped.shape[0] == crop_pixels
   assert sample_one.shape[1] - cropped.shape[1] == crop_pixels
 
+def test_grayscale():
+  grayed = grayscale(sample_one)
+  assert(grayed.shape == sample_one.shape[0:2])
+  assert(len(grayed.shape) == 2)
+  assert(grayed.ndim == 2)
+
+def test_fixed_threshold():
+  grayed = grayscale(sample_one)
+  thresholded = fixed_threshold(grayed, 130)
+
+  assert thresholded.ndim == 2
+  assert thresholded.shape == grayed.shape[0:2]
+  for row in thresholded:
+    for pix in row:
+      assert pix == 0 or pix == 255
+
+def test_otsu_threshold():
+  grayed = grayscale(sample_one)
+  otsu_thresholded = otsu_threshold(grayed, 200, thresh_style=cv.THRESH_BINARY)
+
+  assert type(otsu_thresholded['otsu_thresh']) == float
+  assert otsu_thresholded['image'].ndim == 2
+  assert otsu_thresholded['image'].shape == grayed.shape[0:2]
+  for row in otsu_thresholded['image']:
+    for pix in row:
+      assert pix == 0 or pix == 200
 
 def test_frame():
   framed = frame(sample_one)
@@ -133,10 +159,12 @@ def test_frame():
   assert sample_one.shape[0] < framed.shape[0] and sample_one.shape[1] < framed.shape[1]
   assert sample_one.shape[0] == framed.shape[0] - 4
   assert sample_one.shape[1] == framed.shape[1] - 4
+  assert list(framed[0:1, 0:1].flatten()) == [0, 0, 255]
 
-  framed = frame(sample_one, 1, 1, 3, 3)
+  framed = frame(sample_one, 1, 1, 3, 3, color=[150, 0, 0])
   assert sample_one != framed
   assert sample_one.shape[0] < framed.shape[0] and sample_one.shape[1] < framed.shape[1]
   assert sample_one.shape[0] == framed.shape[0] - 2
   assert sample_one.shape[1] == framed.shape[1] - 6
+  assert list(framed[0:1, 0:1].flatten()) == [150, 0, 0]
 

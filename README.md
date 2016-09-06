@@ -15,6 +15,7 @@
 ```python
 show(crop(load('images/1.jpg'), 200, 420, 100, 230))
 ```
+
 #### Grayscale an image
 ```python
 show(grayscale(load('images/1.jpg')))
@@ -40,6 +41,13 @@ gray = grayscale(resize(load('images/2.jpg'), 900, 500))
 show(otsu_threshold(gray, 200)['image'])
 ```
 
+#### Thin and Stress Effects
+```python
+im = resize(load('images/2.jpg'), 800, 400)
+show(im)
+show(thin(im, (5, 5)))
+show(stress(im, (5, 5)))
+```
 
 
 ## Contribute
