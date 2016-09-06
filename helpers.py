@@ -1,3 +1,4 @@
+#-*- encoding: utf-8
 '''
 ' OpenCV Helpers
 ' ==============
@@ -43,19 +44,28 @@ def show(image, title='Image Viewer'):
   cv.destroyAllWindows()
 
 def save(path, image):
-  ''' persist :image: object to disk. '''
+  ''' persist :image: object to disk. if path is given, load() first. '''
+  if isinstance(image, str):
+    image = load(str)
+
   cv.imwrite(path, image)
 
 def plot(image, is_bgr=True, cmap=None):
-  ''' show image in matplotlib viewer. '''
+  ''' show image in matplotlib viewer. if path is given, load() first. '''
   if isinstance(image, str):
     image = load(str)
+
   # opencv image are in BGR colormap while matplotlib in RGB.
   if is_bgr:
     image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
   plt.imshow(image, cmap)
-  plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
+  # hide tick values on X and Y axis.
+  plt.xticks([]), plt.yticks([])
   plt.show()
+
+def metadata(image):
+  ''' return a hash with useful info about :image:. '''
+  return {'size': image.size, 'shape': image.shape, 'date_type': image.dtype }
 
 '''
 '   Images Manipulation Functions
@@ -91,7 +101,7 @@ def crop(image, x_start, x_end, y_start, y_end):
   ''' cut q region of :image: by suppiled x, y pixel coordinates. '''
   range_check = lambda p, lim: p < 0 or p > lim
   side_error  = lambda name, val, lim: "Supplied %s(=%d) argument is out of bount 0 =< %s =< %d " % \
-                                  (name, x_start, name, x_lim)
+                                  (name, val, name, lim)
 
   x_lim, y_lim = image.shape[1], image.shape[0]
 
@@ -100,9 +110,9 @@ def crop(image, x_start, x_end, y_start, y_end):
   if range_check(x_end, x_lim):
     raise IndexError(side_error("x_end", x_end, x_lim))
   if range_check(y_start, y_lim):
-    raise IndexError(side_error("y_start", y_start, x_lim))
+    raise IndexError(side_error("y_start", y_start, y_lim))
   if range_check(y_end, y_lim):
-    raise IndexError(side_error("y_end", y_end, x_lim))
+    raise IndexError(side_error("y_end", y_end, y_lim))
 
   if x_start > x_end:
     raise IndexError("x_start(=%d) index can't be greater than x_end(=%d)" % (x_start, x_end))
@@ -122,12 +132,21 @@ def crop(image, x_start, x_end, y_start, y_end):
 def grayscale(image):
   return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
-def fixed_threshold(image, thres_value=130):
-  ''' :param thres_value: the threshold constant. '''
-  ret, thresholded = cv.threshold(image, thres_value, 255, cv.THRESH_BINARY_INV)
+def fixed_threshold(image, thresh_value=120, above_thresh_assigned=255, thresh_style=cv.THRESH_BINARY_INV):
+  '''
+  :param thres_value: the threshold constant.
+  :param thresh_style: can be any of the following.
+                      cv.THRESH_BINARY
+                      cv2.THRESH_BINARY_INV
+                      cv2.THRESH_TRUNC
+                      cv2.THRESH_TOZERO
+                      cv2.THRESH_TOZERO_INV
+   '''
+  ret, thresholded = cv.threshold(image, thresh_value, above_thresh_assigned, thresh_style)
   return thresholded
 
-def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
+def adaptive_threshold(image, above_thresh_assigned=255, kind='mean', cell_size=35, c_param=17,
+                       thresh_style=cv.THRESH_BINARY_INV):
   '''
   :param kind: specify adaptive method, whether 'mean' or 'gaussian'.
   :param cell_size: n for the region size (n x n).
@@ -141,14 +160,19 @@ def adaptive_threshold(image, kind='mean', cell_size=35, c_param=17):
   else:
     raise ValueError('Unknown adaptive threshold method.')
 
-  return cv.adaptiveThreshold(image, 255, method, cv.THRESH_BINARY_INV, cell_size, c_param)
+  return cv.adaptiveThreshold(image, above_thresh_assigned, method, thresh_style, cell_size, c_param)
 
-def smooth(image, method='gaussian'):
-  ''' blur filter for noise removal . '''
+def otsu_threshold(image, above_thresh_assigned=255, thresh_style=cv.THRESH_BINARY_INV):
+  ''' apply otsu's binarization algorithm to find optimal threshold value. '''
+  ret, thresholded = cv.threshold(image, 0, above_thresh_assigned, thresh_style  + cv.THRESH_OTSU)
+  return { 'otsu_thresh': ret, 'image': thresholded }
+
+def smooth(image, method='gaussian', kernel=(5, 5)):
+  ''' blur filter for noise removal. '''
   if method == 'blur':
-    return cv.blur(image, (5, 5))
+    return cv.blur(image, kernel)
   elif method =='gaussian':
-    return cv.GaussianBlur(image, (5, 5), 0)
+    return cv.GaussianBlur(image, kernel, 0)
   else:
     raise ValueError('Unknown smoothing method.')
 
@@ -176,8 +200,8 @@ def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT
   Other options for borderType are: cv.BORDER_REFLECT,
                                     cv.BORDER_REFLECT_101,
                                     cv.BORDER_DEFAULT,
-                                    cv2.BORDER_REPLICATE,
-                                    cv2.BORDER_WRAP
+                                    cv.BORDER_REPLICATE,
+                                    cv.BORDER_WRAP
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
 
@@ -214,6 +238,14 @@ def combine(filename, path=None):
   curr = path or current_dir()
   return os.path.join(curr, filename)
 
+'''
+' Examples (for examples.py later)
+'''
+def examples():
+  im = resize(load('images/2.jpg'), 800, 400)
+  show(im)
+  show(thin(im, (5, 5)))
+  show(stress(im, (5, 5)))
 
 if __name__ == '__main__':
-  plot(crop(load('images/1.jpg'), 0, 5, 100, 100))
+  examples()
