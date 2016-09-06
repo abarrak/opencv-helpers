@@ -18,9 +18,9 @@ _2 = crop(_1, 200, 420, 100, 230)
 plot_two_images(_1, _2, title='Croping')
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/crop_1.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/crop_1.png)
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/crop_2.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/crop_2.png)
 
 #### Grayscale an image
 ```python
@@ -29,7 +29,7 @@ plot_two_images(_1, _2, title='Croping')
   plot_two_images(_1, _2, cmap_2='gray', title='GrayScaling')
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/grayscale.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/grayscale.png)
 
 
 #### Threshold an image based on fixed criteria
@@ -41,7 +41,7 @@ _2 = fixed_threshold(gray, 40)
 plot_two_images(_1, _2, cmap_2='Greys', title="Fixed Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/fixed_threshold_1.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/fixed_threshold_1.png)
 
 ```python
 _1 = convert_to_rgb(load('images/1.jpg'))
@@ -51,7 +51,7 @@ _2 = fixed_threshold(gray, 120, 255, cv.THRESH_BINARY)
 plot_two_images(_1, _2, cmap_2='Greys', title="Fixed Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/fixed_threshold_2.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/fixed_threshold_2.png)
 
 #### Threshold an image based on adaptive criteria
 ```python
@@ -62,7 +62,7 @@ _2 = adaptive_threshold(gray, 200)
 plot_two_images(_1, _2, cmap_2='Greys', title="Adaptive Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/adaptive_threshold_1.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/adaptive_threshold_1.png)
 
 ```python
 _1 = convert_to_rgb(load('images/2.jpg'))
@@ -72,7 +72,7 @@ _2 = adaptive_threshold(gray, 180, 'gaussian', 35, 15, cv.THRESH_BINARY)
 plot_two_images(_1, _2, cmap_2='Greys', title="Adaptive Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/adaptive_threshold_2.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/adaptive_threshold_2.png)
 
 #### Threshold an image using otsu's binarization
 ```python
@@ -83,7 +83,7 @@ _2 = otsu_threshold(gray, 200)['image']
 plot_two_images(_1, _2, cmap_2='Greys', title="Otsu Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/otsu_1.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/otsu_1.png)
 
 ```python
 _1 = convert_to_rgb(load('images/1.jpg'))
@@ -93,7 +93,7 @@ _2 = otsu_threshold(gray, 200)['image']
 plot_two_images(_1, _2, cmap_2='Greys', title="Otsu Threshold")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/otsu_2.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/otsu_2.png)
 
 #### Thin and Stress Effects
 ```python
@@ -102,7 +102,7 @@ _2 = thin(_1, (10, 10))
 plot_two_images(_1, _2, title="Thin (Erode) Effect")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/thin.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/thin.png)
 
 ```python
 _1 = convert_to_rgb(load('images/2.jpg'))
@@ -110,7 +110,7 @@ _2 = stress(_1, (10, 10))
 plot_two_images(_1, _2, title="Stress (Dilate) Effect")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/stress.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/stress.png)
 
 
 #### Smooth an Image
@@ -120,7 +120,7 @@ _2 = smooth(_1, kernel=(6, 6), method="blur")
 plot_two_images(_1, _2, title="Blur Effect")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/blur_1.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/blur_1.png)
 
 ```python
 _1 = convert_to_rgb(load('images/2.jpg'))
@@ -128,7 +128,7 @@ _2 = smooth(_1, kernel=(51, 51), method="gaussian")
 plot_two_images(_1, _2, title="Gaussian Blur Effect")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/blur_2.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/blur_2.png)
 
 
 #### Removing Noise and Filling Gaps
@@ -140,7 +140,7 @@ _2 = fill(_1, kernel=(100, 100))
 plot_two_images(_1, _2, cmap_1='Greys', cmap_2='Greys', title="MorphologyEx Effect")
 ```
 
-[screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/filling_gaps.png)
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/filling_gaps.png)
 
 
 ## Contribute
