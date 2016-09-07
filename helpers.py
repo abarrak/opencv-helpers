@@ -246,7 +246,7 @@ def fill(image, kernel=(2, 2)):
 
 def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[255, 0, 0]):
   '''
-  Add borders around :image:
+  add borders around :image:
   :param image: has to be in RBG color scheme. Use `convert_to_rgb` if it's in opencv BGR scheme.
   :param color: array representing an RGB color.
   :param borderType: Other options are:
@@ -258,6 +258,9 @@ def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
 
+def mask(image, mask_colors):
+  ''' apply color mask on :image:  '''
+  pass
 
 
 '''

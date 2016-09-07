@@ -159,7 +159,7 @@ def test_frame():
   assert sample_one.shape[0] < framed.shape[0] and sample_one.shape[1] < framed.shape[1]
   assert sample_one.shape[0] == framed.shape[0] - 4
   assert sample_one.shape[1] == framed.shape[1] - 4
-  assert list(framed[0:1, 0:1].flatten()) == [0, 0, 255]
+  assert list(framed[0:1, 0:1].flatten()) == [255, 0, 0]
 
   framed = frame(sample_one, 1, 1, 3, 3, color=[150, 0, 0])
   assert sample_one != framed
@@ -167,4 +167,3 @@ def test_frame():
   assert sample_one.shape[0] == framed.shape[0] - 2
   assert sample_one.shape[1] == framed.shape[1] - 6
   assert list(framed[0:1, 0:1].flatten()) == [150, 0, 0]
-
