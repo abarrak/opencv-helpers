@@ -108,6 +108,7 @@ def metadata(image):
   ''' return a hash with useful info about :image:. '''
   return {'pixels_number': image.size, 'structure': image.shape, 'date_type': image.dtype }
 
+
 '''
 '   Images Manipulation Functions
 '''
@@ -166,6 +167,7 @@ def crop(image, x_start, x_end, y_start, y_end):
     raise IndexError("y_start and y_end can't both have the same value(=%d)" % y_start)
 
   return image[y_start:y_end, x_start:x_end]
+
 
 '''
 '   Image Preprocessing Functions
@@ -242,16 +244,20 @@ def fill(image, kernel=(2, 2)):
   ''' fill gaps in shapes structure. '''
   return cv.morphologyEx(image, cv.MORPH_CLOSE, kernel)
 
-def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[0, 0, 255]):
+def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT, color=[255, 0, 0]):
   '''
-  Add borders around :image:.
-  Other options for borderType are: cv.BORDER_REFLECT,
+  Add borders around :image:
+  :param image: has to be in RBG color scheme. Use `convert_to_rgb` if it's in opencv BGR scheme.
+  :param color: array representing an RGB color.
+  :param borderType: Other options are:
+                                    cv.BORDER_REFLECT,
                                     cv.BORDER_REFLECT_101,
                                     cv.BORDER_DEFAULT,
                                     cv.BORDER_REPLICATE,
                                     cv.BORDER_WRAP
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
+
 
 
 '''

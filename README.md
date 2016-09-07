@@ -140,6 +140,15 @@ plot_two_images(_1, _2, cmap_1='Greys', cmap_2='Greys', title="MorphologyEx Effe
 ![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/filling_gaps.png)
 
 
+### Add Border to Image
+```python
+_1 = convert_to_rgb(load('images/1.jpg'))
+_2 = frame(_1, 5, 5, 2, 2, color=[250, 0, 0])
+plot_two_images(_1, _2, title="Image Framing")
+```
+
+![screenshot](https://raw.githubusercontent.com/abarrak/opencv-helpers/master/docs/frame.png)
+
 ## Contribute
 Once you've made your great commits:
 * Fork The repository.
