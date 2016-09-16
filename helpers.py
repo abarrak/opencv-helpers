@@ -258,21 +258,16 @@ def frame(image, top=2, bottom=2, left=2, right=2, borderType=cv.BORDER_CONSTANT
   '''
   return cv.copyMakeBorder(image, top, bottom, left, right, borderType, value=color)
 
-def mask(image, color_mask_min=[0, 0, 50], color_mask_max=[0, 0, 255]):
+def mask(image, color_min=[180, 190, 180], color_max=[255, 255, 255]):
   '''
-  apply masking on :image: using spplied :color_mask_min: and :color_mask_max: rgb color values.
-  default values for :color_mask_* paramters is an example of blue masking.
+  apply masking on :image: using spplied :color_min: and :color_max: rgb colors.
   '''
-  hsv_image = cv.cvtColor(image, cv.COLOR_BGR2HSV)
-  brg_color_min = cv.cvtColor(np.uint8([[color_mask_min]]), cv.COLOR_RGB2BGR)
-  brg_color_max = cv.cvtColor(np.uint8([[color_mask_max]]), cv.COLOR_RGB2BGR)
+  mask_min = np.array(color_min, dtype = "uint8")
+  mask_max = np.array(color_max, dtype = "uint8")
 
-  color_min = cv.cvtColor(brg_color_min, cv.COLOR_BGR2HSV)
-  color_max = cv.cvtColor(brg_color_max, cv.COLOR_BGR2HSV)
-  masked = cv.inRange(hsv_image, color_min, color_max)
-
-  return cv.cvtColor(masked, cv.COLOR_GRAY2RGB)
-
+  mask = cv.inRange(image, mask_min, mask_max)
+  masked = cv.bitwise_and(image, image, mask = mask)
+  return masked
 
 '''
 '   Image Segmentation Functions
@@ -310,6 +305,6 @@ def combine(filename, path=None):
 if __name__ == '__main__':
   pass
 
-_1 = convert_to_rgb(load('images/1.jpg'))
-_2 = mask(_1)
-plot_two_images(_1, _2, title='Masking')
+# _1 = convert_to_rgb(load('images/1.jpg'))
+# _2 = mask(_1)
+# plot_two_images(_1, _2, title='Masking')
